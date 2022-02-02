@@ -50,17 +50,6 @@ function App() {
     }, 1);
   }, [dark]);
 
-  const link = (emoji: string, label: string, page: Page) => (
-    <button
-      className="emoji-link"
-      onClick={() => setPage(page)}
-      title={label}
-      aria-label={label}
-    >
-      {emoji}
-    </button>
-  );
-
   return (
     <div className={"App-container" + (colorBlind ? " color-blind" : "")}>
       <h1>WORDLE</h1>
