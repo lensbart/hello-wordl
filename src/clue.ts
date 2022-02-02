@@ -1,5 +1,3 @@
-import { Difficulty, englishNumbers, ordinal } from "./util";
-
 export enum Clue {
   Absent,
   Elsewhere,
@@ -50,10 +48,4 @@ export function clueWord(clue: Clue): string {
   } else {
     return "correct";
   }
-}
-
-export function describeClue(clue: CluedLetter[]): string {
-  return clue
-    .map(({ letter, clue }) => letter.toUpperCase() + " " + clueWord(clue!))
-    .join(", ");
 }

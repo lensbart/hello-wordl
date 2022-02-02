@@ -37,6 +37,11 @@ export function Keyboard(props: KeyboardProps) {
                 onClick={() => {
                   props.onKey(label);
                 }}
+                style={
+                  label === "Enter"
+                    ? { fontSize: "12px", textTransform: "uppercase" }
+                    : { fontSize: "13.3333px" }
+                }
               >
                 {label.replace("Backspace", "⌫")}
               </div>

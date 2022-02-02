@@ -1,24 +1,9 @@
 import { Clue } from "./clue";
 import { Row, RowState } from "./Row";
-import { maxGuesses } from "./util";
 
 export function About() {
   return (
     <div className="App-about">
-      <p>
-        <i>hello wordl</i> is a remake of the word game{" "}
-        <a href="https://www.powerlanguage.co.uk/wordle/">
-          <i>Wordle</i>
-        </a>{" "}
-        by <a href="https://twitter.com/powerlanguish">powerlanguage</a>, which
-        I think is based on the TV show <i>Lingo</i>.
-      </p>
-      <p>
-        You get {maxGuesses} tries to guess a target word.
-        <br />
-        After each guess, you get Mastermind-style feedback.
-      </p>
-      <hr />
       <Row
         rowState={RowState.LockedIn}
         wordLength={4}
