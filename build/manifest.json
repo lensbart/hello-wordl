@@ -1,13 +1,7 @@
 {
-  "short_name": "hello wordl",
-  "name": "hello wordl",
-  "icons": [
-    {
-      "src": "favicon.png",
-      "sizes": "128x128",
-      "type": "image/png"
-    }
-  ],
+  "short_name": "Wordle",
+  "name": "Wordle",
+  "icons": [],
   "start_url": ".",
   "display": "standalone",
   "theme_color": "#000000",
