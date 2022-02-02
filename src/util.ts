@@ -1,5 +1,3 @@
-import dictionary from "./dictionary.json";
-
 export enum Difficulty {
   Normal,
   Hard,
@@ -7,8 +5,6 @@ export enum Difficulty {
 }
 
 export const maxGuesses = 6;
-
-export const dictionarySet: Set<string> = new Set(dictionary);
 
 function mulberry32(a: number) {
   return function () {

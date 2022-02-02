@@ -1,19 +1,9 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Row, RowState } from "./Row";
 import dictionary from "./dictionary.json";
-import { Clue, clue, describeClue, violation } from "./clue";
+import { Clue, clue, describeClue } from "./clue";
 import { Keyboard } from "./Keyboard";
-import targetList from "./targets.json";
-import {
-  describeSeed,
-  dictionarySet,
-  Difficulty,
-  pick,
-  resetRng,
-  seed,
-  speak,
-  urlParam,
-} from "./util";
+import { describeSeed, pick, resetRng, seed, speak, urlParam } from "./util";
 import { decode, encode } from "./base64";
 
 enum GameState {
@@ -25,23 +15,12 @@ enum GameState {
 interface GameProps {
   maxGuesses: number;
   hidden: boolean;
-  difficulty: Difficulty;
   colorBlind: boolean;
   keyboardLayout: string;
 }
 
-const targets = targetList.slice(0, targetList.indexOf("murky") + 1); // Words no rarer than this one
 const minLength = 4;
 const maxLength = 11;
-
-function randomTarget(wordLength: number): string {
-  const eligible = targets.filter((word) => word.length === wordLength);
-  let candidate: string;
-  do {
-    candidate = pick(eligible);
-  } while (/\*/.test(candidate));
-  return candidate;
-}
 
 function getChallengeUrl(target: string): string {
   return (
@@ -60,47 +39,24 @@ try {
   console.warn(e);
   challengeError = true;
 }
-if (initChallenge && !dictionarySet.has(initChallenge)) {
-  initChallenge = "";
-  challengeError = true;
-}
-
-function parseUrlLength(): number {
-  const lengthParam = urlParam("length");
-  if (!lengthParam) return 5;
-  const length = Number(lengthParam);
-  return length >= minLength && length <= maxLength ? length : 5;
-}
-
-function parseUrlGameNumber(): number {
-  const gameParam = urlParam("game");
-  if (!gameParam) return 1;
-  const gameNumber = Number(gameParam);
-  return gameNumber >= 1 && gameNumber <= 1000 ? gameNumber : 1;
-}
 
 function Game(props: GameProps) {
   const [gameState, setGameState] = useState(GameState.Playing);
   const [guesses, setGuesses] = useState<string[]>([]);
   const [currentGuess, setCurrentGuess] = useState<string>("");
   const [challenge, setChallenge] = useState<string>(initChallenge);
-  const [wordLength, setWordLength] = useState(
-    challenge ? challenge.length : parseUrlLength()
-  );
-  const [gameNumber, setGameNumber] = useState(parseUrlGameNumber());
-  const [target, setTarget] = useState(() => {
-    resetRng();
-    // Skip RNG ahead to the parsed initial game number:
-    for (let i = 1; i < gameNumber; i++) randomTarget(wordLength);
-    return challenge || randomTarget(wordLength);
-  });
+  const target = "sautisol";
+  const wordLength = target.length;
+  const gameNumber = 1;
   const [hint, setHint] = useState<string>(
     challengeError
       ? `Invalid challenge string, playing random game.`
       : `Make your first guess!`
   );
-  const currentSeedParams = () =>
-    `?seed=${seed}&length=${wordLength}&game=${gameNumber}`;
+  const currentSeedParams = useCallback(
+    () => `?seed=${seed}&length=${wordLength}&game=${gameNumber}`,
+    [gameNumber, wordLength]
+  );
   useEffect(() => {
     if (seed) {
       window.history.replaceState(
@@ -109,7 +65,7 @@ function Game(props: GameProps) {
         window.location.pathname + currentSeedParams()
       );
     }
-  }, [wordLength, gameNumber]);
+  }, [wordLength, gameNumber, currentSeedParams]);
   const tableRef = useRef<HTMLTableElement>(null);
   const startNextGame = () => {
     if (challenge) {
@@ -117,15 +73,10 @@ function Game(props: GameProps) {
       window.history.replaceState({}, document.title, window.location.pathname);
     }
     setChallenge("");
-    const newWordLength =
-      wordLength >= minLength && wordLength <= maxLength ? wordLength : 5;
-    setWordLength(newWordLength);
-    setTarget(randomTarget(newWordLength));
     setHint("");
     setGuesses([]);
     setCurrentGuess("");
     setGameState(GameState.Playing);
-    setGameNumber((x) => x + 1);
   };
 
   async function share(copiedHint: string, text?: string) {
@@ -180,16 +131,8 @@ function Game(props: GameProps) {
         setHint("Not a valid word");
         return;
       }
-      for (const g of guesses) {
-        const c = clue(g, target);
-        const feedback = violation(props.difficulty, c, currentGuess);
-        if (feedback) {
-          setHint(feedback);
-          return;
-        }
-      }
       setGuesses((guesses) => guesses.concat([currentGuess]));
-      setCurrentGuess((guess) => "");
+      setCurrentGuess((_guess) => "");
 
       const gameOver = (verbed: string) =>
         `You ${verbed}! The answer was ${target.toUpperCase()}. (Enter to ${
@@ -258,44 +201,6 @@ function Game(props: GameProps) {
 
   return (
     <div className="Game" style={{ display: props.hidden ? "none" : "block" }}>
-      <div className="Game-options">
-        <label htmlFor="wordLength">Letters:</label>
-        <input
-          type="range"
-          min={minLength}
-          max={maxLength}
-          id="wordLength"
-          disabled={
-            gameState === GameState.Playing &&
-            (guesses.length > 0 || currentGuess !== "" || challenge !== "")
-          }
-          value={wordLength}
-          onChange={(e) => {
-            const length = Number(e.target.value);
-            resetRng();
-            setGameNumber(1);
-            setGameState(GameState.Playing);
-            setGuesses([]);
-            setCurrentGuess("");
-            setTarget(randomTarget(length));
-            setWordLength(length);
-            setHint(`${length} letters`);
-          }}
-        ></input>
-        <button
-          style={{ flex: "0 0 auto" }}
-          disabled={gameState !== GameState.Playing || guesses.length === 0}
-          onClick={() => {
-            setHint(
-              `The answer was ${target.toUpperCase()}. (Enter to play again)`
-            );
-            setGameState(GameState.Lost);
-            (document.activeElement as HTMLElement)?.blur();
-          }}
-        >
-          Give up
-        </button>
-      </div>
       <table
         className="Game-rows"
         tabIndex={0}

@@ -36,7 +36,6 @@ function App() {
     window.matchMedia("(prefers-color-scheme: dark)").matches;
   const [dark, setDark] = useSetting<boolean>("dark", prefersDark);
   const [colorBlind, setColorBlind] = useSetting<boolean>("colorblind", false);
-  const [difficulty, setDifficulty] = useSetting<number>("difficulty", 0);
   const [keyboard, setKeyboard] = useSetting<string>(
     "keyboard",
     "qwertyuiop-asdfghjkl-BzxcvbnmE"
@@ -67,17 +66,7 @@ function App() {
 
   return (
     <div className={"App-container" + (colorBlind ? " color-blind" : "")}>
-      <h1>
-        <span
-          style={{
-            color: difficulty > 0 ? "#e66" : "inherit",
-            fontStyle: difficulty > 1 ? "italic" : "inherit",
-          }}
-        >
-          hell
-        </span>
-        o wordl
-      </h1>
+      <h1>WORDLE</h1>
       <div className="top-right">
         {page !== "game" ? (
           link("❌", "Close", "game")
@@ -122,36 +111,6 @@ function App() {
             <label htmlFor="colorblind-setting">Color blind mode</label>
           </div>
           <div className="Settings-setting">
-            <input
-              id="difficulty-setting"
-              type="range"
-              min="0"
-              max="2"
-              value={difficulty}
-              onChange={(e) => setDifficulty(+e.target.value)}
-            />
-            <div>
-              <label htmlFor="difficulty-setting">Difficulty:</label>
-              <strong>{["Normal", "Hard", "Ultra Hard"][difficulty]}</strong>
-              <div
-                style={{
-                  fontSize: 14,
-                  height: 40,
-                  marginLeft: 8,
-                  marginTop: 8,
-                }}
-              >
-                {
-                  [
-                    `Guesses must be valid dictionary words.`,
-                    `Wordle's "Hard Mode". Green letters must stay fixed, and yellow letters must be reused.`,
-                    `An even stricter Hard Mode. Yellow letters must move away from where they were clued, and gray clues must be obeyed.`,
-                  ][difficulty]
-                }
-              </div>
-            </div>
-          </div>
-          <div className="Settings-setting">
             <label htmlFor="keyboard-setting">Keyboard layout:</label>
             <select
               name="keyboard-setting"
@@ -179,7 +138,6 @@ function App() {
       <Game
         maxGuesses={maxGuesses}
         hidden={page !== "game"}
-        difficulty={difficulty}
         colorBlind={colorBlind}
         keyboardLayout={keyboard.replaceAll(
           /[BE]/g,
