@@ -80,6 +80,11 @@ function Game(props: GameProps) {
         }
         setGuesses((guesses) => guesses.concat([currentGuess]));
         setCurrentGuess((_guess) => "");
+        if (currentGuess === target) {
+          window.alert(
+            "YAYYYYY!!!!!! We’re going to SAUTI SOL on Wednesday 6 April in Ancienne Belgique 🥳🥳🥳"
+          );
+        }
       }
     },
     [
