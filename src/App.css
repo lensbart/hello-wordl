@@ -56,6 +56,9 @@ body {
 }
 
 .App-container h1 {
+	border-bottom: 1px solid rgb(58, 58, 60);
+	padding-bottom: 8px;
+	margin-bottom: 4px;
   margin-top: 0;
 }
 
@@ -127,18 +130,21 @@ table.Game-rows > tbody {
 .letter-correct {
   border: 2px solid rgba(0, 0, 0, 0.3);
   background-color: rgb(87, 172, 120);
+	font-size: 16px;
   color: white !important;
 }
 
 .letter-elsewhere {
-  border: 2px dotted rgba(0, 0, 0, 0.3);
-  background-color: #e9c601;
+  background-color: rgb(181, 159, 59);
+	font-size: 16px;
+	border: 2px solid rgb(181, 159, 59);
   color: white !important;
 }
 
 .letter-absent {
   border: 2px solid transparent;
-  background-color: rgb(162, 162, 162);
+	font-size: 16px;
+  background-color: rgb(58, 58, 60);
   color: white !important;
 }
 

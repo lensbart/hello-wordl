@@ -1,4 +1,4 @@
-export const maxGuesses = 8;
+export const maxGuesses = 10;
 
 function mulberry32(a: number) {
   return function () {

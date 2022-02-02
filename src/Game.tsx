@@ -71,9 +71,11 @@ function Game(props: GameProps) {
         setCurrentGuess((guess) => guess.slice(0, -1));
       } else if (key === "Enter") {
         if (currentGuess.length !== wordLength) {
+          window.alert("Too short, shorty 😘");
           return;
         }
         if (!dictionary.includes(currentGuess)) {
+          window.alert("Not a valid word ☹️");
           return;
         }
         setGuesses((guesses) => guesses.concat([currentGuess]));
