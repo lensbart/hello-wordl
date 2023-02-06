@@ -25,7 +25,7 @@ function Game(props: GameProps) {
   const [guesses, setGuesses] = useState<string[]>([]);
   const [currentGuess, setCurrentGuess] = useState<string>("");
   const [challenge, setChallenge] = useState<string>(initChallenge);
-  const target = "sautisol";
+  const target = "burnaboy"; // "sautisol";
   const wordLength = target.length;
   const gameNumber = 1;
   const currentSeedParams = useCallback(
@@ -52,6 +52,8 @@ function Game(props: GameProps) {
     setCurrentGuess("");
     setGameState(GameState.Playing);
   }, [challenge]);
+
+  const [showCongratulations, setShowCongratulations] = useState(false);
 
   const onKey = useCallback(
     (key: string) => {
@@ -80,10 +82,9 @@ function Game(props: GameProps) {
         }
         setGuesses((guesses) => guesses.concat([currentGuess]));
         setCurrentGuess((_guess) => "");
+
         if (currentGuess === target) {
-          window.alert(
-            "YAYYYYY!!!!!! We’re going to SAUTI SOL on Wednesday 6 April in Ancienne Belgique 🥳🥳🥳"
-          );
+          setShowCongratulations(true);
         }
       }
     },
@@ -146,6 +147,22 @@ function Game(props: GameProps) {
 
   return (
     <div className="Game" style={{ display: props.hidden ? "none" : "block" }}>
+      <style>
+        {`@keyframes bouncy {
+            0% { transform: rotate(0deg) translateY(0); }
+            25% { transform: rotate(-10deg) translateY(0); }
+            50% { transform: rotate(0deg) translateY(0); }
+            75% { transform: rotate(10deg) translateY(0); }
+            100% { transform: rotate(0deg) translateY(0); }
+          }`}
+      </style>
+      {showCongratulations && (
+        <div style={{ padding: "1em 0" }}>
+          <strong>YAYYYYY!!!!!!</strong> We’re going to{" "}
+          <strong>BURNA BOY</strong> on Saturday 17 June in Arnhem (The
+          Netherlands) 🥳 🥳 🥳
+        </div>
+      )}
       <table
         className="Game-rows"
         tabIndex={0}
@@ -159,6 +176,22 @@ function Game(props: GameProps) {
         letterInfo={letterInfo}
         onKey={onKey}
       />
+      {showCongratulations && (
+        <div
+          style={{
+            animation: "bouncy 1s infinite",
+            animationTimingFunction: "linear",
+            transformOrigin: "50% 100%",
+            position: "fixed",
+            bottom: -130,
+            left: 0,
+            width: "100%",
+            textAlign: "center",
+          }}
+        >
+          <img alt="Burna Boy" src="/hello-wordl/burna-boy.png" />
+        </div>
+      )}
     </div>
   );
 }

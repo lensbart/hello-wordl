@@ -1,6 +1,7 @@
 {
-  "name": "wordl",
-  "version": "0.1.0",
+  "name": "hello-wordl",
+  "version": "0.2.0",
+  "homepage": "https://lensbart.github.io/hello-wordl",
   "private": false,
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.1",
